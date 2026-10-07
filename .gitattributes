@@ -1,0 +1,24 @@
+# Normalize text in Git; keep shell scripts executable/usable across platforms.
+* text=auto
+*.md text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+*.sh text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+LICENSE text eol=lf
+
+# No Git LFS is configured; raw GIS data is excluded by .gitignore.
+*.tif binary
+*.tiff binary
+*.shp binary
+*.shx binary
+*.dbf binary
+*.png binary
+*.jpg binary
+*.jpeg binary

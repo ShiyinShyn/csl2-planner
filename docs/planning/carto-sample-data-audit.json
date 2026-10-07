@@ -1,0 +1,1721 @@
+{
+  "audit_date": "2026-10-07",
+  "method": "Read TIFF metadata/pixels and SHP/DBF headers using tifffile, numpy and Python standard library. Geometry validity and graph connectivity are not assessed.",
+  "rasters": [
+    {
+      "file": "GIS-files-example\\GeoTIFF\\ZUTTOMAYO CITY_Depth.tif",
+      "shape": [
+        2048,
+        2048
+      ],
+      "dtype": "float32",
+      "min": 4.9530015530763194e-05,
+      "max": 1.701410009187828e+38,
+      "zero_count": 0,
+      "finite_count": 4194304,
+      "geotiff_tags": {
+        "33550": [
+          7.0,
+          7.0,
+          1.0
+        ],
+        "33922": [
+          1024.0,
+          1024.0,
+          0.0,
+          166021.44317933184,
+          0.0,
+          0.0
+        ],
+        "34735": [
+          1,
+          1,
+          0,
+          9,
+          1024,
+          0,
+          1,
+          1,
+          1025,
+          0,
+          1,
+          1,
+          1026,
+          34737,
+          27,
+          27,
+          2048,
+          0,
+          1,
+          4326,
+          2049,
+          34737,
+          7,
+          7,
+          2054,
+          0,
+          1,
+          9102,
+          3072,
+          0,
+          1,
+          32631,
+          3073,
+          34737,
+          23,
+          34,
+          3076,
+          0,
+          1,
+          9001
+        ],
+        "34737": "A Cities: Skylines II save|WGS 84|WGS 84 / UTM zone 31N|",
+        "42113": "1.70141e+038"
+      },
+      "aux_xml": "<PAMDataset>\n  <PAMRasterBand band=\"1\">\n    <Metadata>\n      <MDI key=\"STATISTICS_APPROXIMATE\">YES</MDI>\n      <MDI key=\"STATISTICS_MINIMUM\">0.0073721432127059</MDI>\n      <MDI key=\"STATISTICS_MAXIMUM\">172.65173339844</MDI>\n      <MDI key=\"STATISTICS_MEAN\">59.378776816965</MDI>\n      <MDI key=\"STATISTICS_STDDEV\">42.304632860527</MDI>\n      <MDI key=\"STATISTICS_VALID_PERCENT\">83.18</MDI>\n    </Metadata>\n  </PAMRasterBand>\n</PAMDataset>\n",
+      "nodata": 1.70141e+38,
+      "valid_pixel_count": 3250910,
+      "valid_min": 4.9530015530763194e-05,
+      "valid_max": 172.65155029296875,
+      "valid_quantiles": [
+        4.9530015530763194e-05,
+        17.5242862701416,
+        54.27483367919922,
+        94.79109191894531,
+        172.65155029296875
+      ]
+    },
+    {
+      "file": "GIS-files-example\\GeoTIFF\\ZUTTOMAYO CITY_Elevation.tif",
+      "shape": [
+        4096,
+        4096
+      ],
+      "dtype": "float32",
+      "min": 22.953500747680664,
+      "max": 618.7125854492188,
+      "zero_count": 0,
+      "finite_count": 16777216,
+      "geotiff_tags": {
+        "33550": [
+          3.5,
+          3.5,
+          1.0
+        ],
+        "33922": [
+          2048.0,
+          2048.0,
+          0.0,
+          166021.44317933184,
+          0.0,
+          0.0
+        ],
+        "34735": [
+          1,
+          1,
+          0,
+          9,
+          1024,
+          0,
+          1,
+          1,
+          1025,
+          0,
+          1,
+          1,
+          1026,
+          34737,
+          27,
+          27,
+          2048,
+          0,
+          1,
+          4326,
+          2049,
+          34737,
+          7,
+          7,
+          2054,
+          0,
+          1,
+          9102,
+          3072,
+          0,
+          1,
+          32631,
+          3073,
+          34737,
+          23,
+          34,
+          3076,
+          0,
+          1,
+          9001
+        ],
+        "34737": "A Cities: Skylines II save|WGS 84|WGS 84 / UTM zone 31N|",
+        "42113": "1.70141e+038"
+      },
+      "aux_xml": "<PAMDataset>\n  <PAMRasterBand band=\"1\">\n    <Metadata>\n      <MDI key=\"STATISTICS_APPROXIMATE\">YES</MDI>\n      <MDI key=\"STATISTICS_MINIMUM\">22.953500747681</MDI>\n      <MDI key=\"STATISTICS_MAXIMUM\">613.63439941406</MDI>\n      <MDI key=\"STATISTICS_MEAN\">153.08759053392</MDI>\n      <MDI key=\"STATISTICS_STDDEV\">57.120375908226</MDI>\n      <MDI key=\"STATISTICS_VALID_PERCENT\">100</MDI>\n    </Metadata>\n  </PAMRasterBand>\n</PAMDataset>\n",
+      "nodata": 1.70141e+38,
+      "valid_pixel_count": 16777216,
+      "valid_min": 22.953500747680664,
+      "valid_max": 618.7125854492188,
+      "valid_quantiles": [
+        22.953500747680664,
+        113.42359924316406,
+        165.34629821777344,
+        186.6591033935547,
+        618.7125854492188
+      ]
+    }
+  ],
+  "vectors": [
+    {
+      "file": "GIS-files-example\\Shapefile\\ZUTTOMAYO CITY_Area_Boundary.shp",
+      "record_count": 536,
+      "shp_type": 5,
+      "bounds_xy": [
+        158853.4375,
+        -7167.99951171875,
+        173189.4375,
+        7167.99951171875
+      ],
+      "bounds_z": [
+        0.0,
+        0.0
+      ],
+      "fields": [
+        {
+          "name": "Name",
+          "type": "C",
+          "length": 21,
+          "decimals": 0
+        },
+        {
+          "name": "Employee",
+          "type": "N",
+          "length": 5,
+          "decimals": 0
+        },
+        {
+          "name": "Object",
+          "type": "C",
+          "length": 14,
+          "decimals": 0
+        },
+        {
+          "name": "Resident",
+          "type": "N",
+          "length": 5,
+          "decimals": 0
+        },
+        {
+          "name": "Unlocked",
+          "type": "N",
+          "length": 1,
+          "decimals": 0
+        }
+      ],
+      "samples": [
+        {
+          "Name": "工业区",
+          "Employee": "14602",
+          "Object": "District",
+          "Resident": "0",
+          "Unlocked": "0"
+        },
+        {
+          "Name": "海参崴港",
+          "Employee": "507",
+          "Object": "District",
+          "Resident": "0",
+          "Unlocked": "0"
+        }
+      ],
+      "categorical_top_values": {
+        "Name": [
+          [
+            "工业区",
+            1
+          ],
+          [
+            "海参崴港",
+            1
+          ],
+          [
+            "尔滨",
+            1
+          ],
+          [
+            "办公区",
+            1
+          ],
+          [
+            "吉林大学",
+            1
+          ],
+          [
+            "商住区",
+            1
+          ],
+          [
+            "Map Tile 121834",
+            1
+          ],
+          [
+            "Map Tile 121835",
+            1
+          ]
+        ],
+        "Object": [
+          [
+            "MapTile",
+            529
+          ],
+          [
+            "District",
+            7
+          ]
+        ]
+      },
+      "crs_wkt": "PROJCS[\"WGS_1984_UTM_Zone_31N\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",3.0],PARAMETER[\"Scale_Factor\",0.9996],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0]]",
+      "encoding": "UTF-8",
+      "encoding_audit": {
+        "declared": "UTF-8",
+        "utf8_invalid_field_values": 0,
+        "gb18030_invalid_field_values": 3,
+        "note": "All inspected character field values passed strict UTF-8 decoding. The original DBF is preserved. Console display artifacts must not be treated as source encoding corruption."
+      }
+    },
+    {
+      "file": "GIS-files-example\\Shapefile\\ZUTTOMAYO CITY_Building_Boundary.shp",
+      "record_count": 3127,
+      "shp_type": 5,
+      "bounds_xy": [
+        162511.25,
+        -2134.970458984375,
+        172507.703125,
+        6914.52392578125
+      ],
+      "bounds_z": [
+        0.0,
+        0.0
+      ],
+      "fields": [
+        {
+          "name": "Name",
+          "type": "C",
+          "length": 67,
+          "decimals": 0
+        },
+        {
+          "name": "Addr_dist",
+          "type": "C",
+          "length": 30,
+          "decimals": 0
+        },
+        {
+          "name": "Addr_strt",
+          "type": "C",
+          "length": 30,
+          "decimals": 0
+        },
+        {
+          "name": "Addr_nmbr",
+          "type": "N",
+          "length": 6,
+          "decimals": 0
+        },
+        {
+          "name": "Asset",
+          "type": "C",
+          "length": 67,
+          "decimals": 0
+        },
+        {
+          "name": "Category",
+          "type": "C",
+          "length": 54,
+          "decimals": 0
+        },
+        {
+          "name": "Employee",
+          "type": "N",
+          "length": 4,
+          "decimals": 0
+        },
+        {
+          "name": "Object",
+          "type": "C",
+          "length": 15,
+          "decimals": 0
+        },
+        {
+          "name": "Resident",
+          "type": "N",
+          "length": 5,
+          "decimals": 0
+        },
+        {
+          "name": "Zoning",
+          "type": "C",
+          "length": 29,
+          "decimals": 0
+        }
+      ],
+      "samples": [
+        {
+          "Name": "城市公园（微型）",
+          "Addr_dist": "商住区",
+          "Addr_strt": "蕨溪巷",
+          "Addr_nmbr": "33",
+          "Asset": "城市公园（微型）",
+          "Category": "Public, Park",
+          "Employee": "0",
+          "Object": "Building",
+          "Resident": "0",
+          "Zoning": "None"
+        },
+        {
+          "Name": "城市公园（微型）",
+          "Addr_dist": "商住区",
+          "Addr_strt": "蕨溪巷",
+          "Addr_nmbr": "49",
+          "Asset": "城市公园（微型）",
+          "Category": "Public, Park",
+          "Employee": "0",
+          "Object": "Building",
+          "Resident": "0",
+          "Zoning": "None"
+        }
+      ],
+      "categorical_top_values": {
+        "Name": [
+          [
+            "荷兰中密度联排住宅",
+            1324
+          ],
+          [
+            "荷兰低密度复折式屋顶住宅",
+            510
+          ],
+          [
+            "工业设施",
+            289
+          ],
+          [
+            "欧洲中密度联排住宅",
+            90
+          ],
+          [
+            "荷兰中密度住宅",
+            85
+          ],
+          [
+            "阳棚拐角公园",
+            38
+          ],
+          [
+            "顺应塔石油平台",
+            26
+          ],
+          [
+            "篮球场",
+            22
+          ]
+        ],
+        "Addr_dist": [
+          [
+            "吉林大学",
+            1964
+          ],
+          [
+            "商住区",
+            555
+          ],
+          [
+            "工业区",
+            362
+          ],
+          [
+            "办公区",
+            116
+          ],
+          [
+            "尔滨",
+            54
+          ],
+          [
+            "(非建制区域)",
+            35
+          ],
+          [
+            "海参崴港",
+            28
+          ],
+          [
+            "柯立芝路",
+            13
+          ]
+        ],
+        "Addr_strt": [
+          [
+            "榛林街",
+            221
+          ],
+          [
+            "山毛榉街",
+            220
+          ],
+          [
+            "柯立芝街",
+            199
+          ],
+          [
+            "铁杉街",
+            193
+          ],
+          [
+            "伍德街",
+            189
+          ],
+          [
+            "冻林街",
+            166
+          ],
+          [
+            "锦绣街",
+            164
+          ],
+          [
+            "",
+            116
+          ]
+        ],
+        "Asset": [
+          [
+            "NL_ResidentialMediumRow14_L1_1x3",
+            92
+          ],
+          [
+            "NL_ResidentialMediumRow12_L1_1x3",
+            87
+          ],
+          [
+            "NL_ResidentialMediumRow15_L1_1x3",
+            80
+          ],
+          [
+            "NL_ResidentialMediumRow08_L1_1x3",
+            77
+          ],
+          [
+            "NL_ResidentialMediumRow09_L1_1x3",
+            76
+          ],
+          [
+            "NL_ResidentialMediumRow02_L1_1x3",
+            76
+          ],
+          [
+            "NL_ResidentialMediumRow07_L1_1x3",
+            72
+          ],
+          [
+            "NL_ResidentialMediumRow16_L1_1x3",
+            70
+          ]
+        ],
+        "Category": [
+          [
+            "Property",
+            2595
+          ],
+          [
+            "Public, Park",
+            197
+          ],
+          [
+            "Public, Parking",
+            59
+          ],
+          [
+            "Extension, Public, Mortuary",
+            35
+          ],
+          [
+            "Public, Transportation",
+            27
+          ],
+          [
+            "Extension, Extractor",
+            26
+          ],
+          [
+            "Public, Education",
+            24
+          ],
+          [
+            "Extension",
+            20
+          ]
+        ],
+        "Object": [
+          [
+            "Building",
+            3125
+          ],
+          [
+            "Extractor",
+            2
+          ]
+        ],
+        "Zoning": [
+          [
+            "Residential",
+            2162
+          ],
+          [
+            "None",
+            512
+          ],
+          [
+            "Industrial",
+            320
+          ],
+          [
+            "Office",
+            57
+          ],
+          [
+            "Residential, Commercial",
+            48
+          ],
+          [
+            "Commercial",
+            28
+          ]
+        ]
+      },
+      "crs_wkt": "PROJCS[\"WGS_1984_UTM_Zone_31N\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",3.0],PARAMETER[\"Scale_Factor\",0.9996],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0]]",
+      "encoding": "UTF-8",
+      "encoding_audit": {
+        "declared": "UTF-8",
+        "utf8_invalid_field_values": 0,
+        "gb18030_invalid_field_values": 5670,
+        "note": "All inspected character field values passed strict UTF-8 decoding. The original DBF is preserved. Console display artifacts must not be treated as source encoding corruption."
+      }
+    },
+    {
+      "file": "GIS-files-example\\Shapefile\\ZUTTOMAYO CITY_Network_Boundary.shp",
+      "record_count": 3963,
+      "shp_type": 5,
+      "bounds_xy": [
+        158855.1875,
+        -7166.25048828125,
+        173187.6875,
+        7166.25
+      ],
+      "bounds_z": [
+        0.0,
+        0.0
+      ],
+      "fields": [
+        {
+          "name": "Name",
+          "type": "C",
+          "length": 30,
+          "decimals": 0
+        },
+        {
+          "name": "Asset",
+          "type": "C",
+          "length": 53,
+          "decimals": 0
+        },
+        {
+          "name": "Category",
+          "type": "C",
+          "length": 27,
+          "decimals": 0
+        },
+        {
+          "name": "Direction",
+          "type": "C",
+          "length": 14,
+          "decimals": 0
+        },
+        {
+          "name": "Elevation",
+          "type": "F",
+          "length": 14,
+          "decimals": 4
+        },
+        {
+          "name": "Form",
+          "type": "C",
+          "length": 14,
+          "decimals": 0
+        },
+        {
+          "name": "Lane",
+          "type": "N",
+          "length": 2,
+          "decimals": 0
+        },
+        {
+          "name": "Limit",
+          "type": "F",
+          "length": 3,
+          "decimals": 0
+        },
+        {
+          "name": "Object",
+          "type": "C",
+          "length": 14,
+          "decimals": 0
+        }
+      ],
+      "samples": [
+        {
+          "Name": "步行小路",
+          "Asset": "人行道",
+          "Category": "Pathway",
+          "Direction": "Both",
+          "Elevation": "201.6615",
+          "Form": "Normal",
+          "Lane": "0",
+          "Limit": "10",
+          "Object": "Pathway"
+        },
+        {
+          "Name": "步行小路",
+          "Asset": "人行道",
+          "Category": "Pathway",
+          "Direction": "Both",
+          "Elevation": "201.6689",
+          "Form": "Normal",
+          "Lane": "0",
+          "Limit": "10",
+          "Object": "Pathway"
+        }
+      ],
+      "categorical_top_values": {
+        "Name": [
+          [
+            "步行小路",
+            684
+          ],
+          [
+            "地铁轨道",
+            366
+          ],
+          [
+            "火车轨道",
+            309
+          ],
+          [
+            "",
+            203
+          ],
+          [
+            "航道",
+            130
+          ],
+          [
+            "有轨电车轨道",
+            71
+          ],
+          [
+            "万年青公路",
+            68
+          ],
+          [
+            "公共交通车道",
+            67
+          ]
+        ],
+        "Asset": [
+          [
+            "步行街道",
+            571
+          ],
+          [
+            "人行道",
+            462
+          ],
+          [
+            "双向地铁轨道",
+            330
+          ],
+          [
+            "单向三车道高速公路",
+            274
+          ],
+          [
+            "小型步行街道",
+            222
+          ],
+          [
+            "双线铁路",
+            214
+          ],
+          [
+            "宽阔人行道",
+            209
+          ],
+          [
+            "四车道分道行驶道路",
+            145
+          ]
+        ],
+        "Category": [
+          [
+            "Small",
+            968
+          ],
+          [
+            "Pathway",
+            675
+          ],
+          [
+            "Highway",
+            509
+          ],
+          [
+            "Subway",
+            366
+          ],
+          [
+            "Train",
+            309
+          ],
+          [
+            "Waterway",
+            266
+          ],
+          [
+            "Medium, Bicycle",
+            202
+          ],
+          [
+            "Small, Tram",
+            118
+          ]
+        ],
+        "Direction": [
+          [
+            "Both",
+            2806
+          ],
+          [
+            "Forward",
+            1157
+          ]
+        ],
+        "Form": [
+          [
+            "Normal",
+            3062
+          ],
+          [
+            "Tunnel",
+            453
+          ],
+          [
+            "Elevated",
+            448
+          ]
+        ],
+        "Object": [
+          [
+            "Road",
+            2200
+          ],
+          [
+            "Track",
+            746
+          ],
+          [
+            "Pathway",
+            684
+          ],
+          [
+            "Waterway",
+            266
+          ],
+          [
+            "Taxiway",
+            63
+          ],
+          [
+            "Runway",
+            4
+          ]
+        ]
+      },
+      "crs_wkt": "PROJCS[\"WGS_1984_UTM_Zone_31N\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",3.0],PARAMETER[\"Scale_Factor\",0.9996],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0]]",
+      "encoding": "UTF-8",
+      "encoding_audit": {
+        "declared": "UTF-8",
+        "utf8_invalid_field_values": 0,
+        "gb18030_invalid_field_values": 3332,
+        "note": "All inspected character field values passed strict UTF-8 decoding. The original DBF is preserved. Console display artifacts must not be treated as source encoding corruption."
+      }
+    },
+    {
+      "file": "GIS-files-example\\Shapefile\\ZUTTOMAYO CITY_Network_Centerline.shp",
+      "record_count": 3967,
+      "shp_type": 3,
+      "bounds_xy": [
+        158849.1875,
+        -7172.25,
+        173292.6875,
+        7271.2490234375
+      ],
+      "bounds_z": [
+        0.0,
+        0.0
+      ],
+      "fields": [
+        {
+          "name": "Name",
+          "type": "C",
+          "length": 36,
+          "decimals": 0
+        },
+        {
+          "name": "Asset",
+          "type": "C",
+          "length": 53,
+          "decimals": 0
+        },
+        {
+          "name": "Category",
+          "type": "C",
+          "length": 27,
+          "decimals": 0
+        },
+        {
+          "name": "Direction",
+          "type": "C",
+          "length": 14,
+          "decimals": 0
+        },
+        {
+          "name": "Elevation",
+          "type": "F",
+          "length": 14,
+          "decimals": 4
+        },
+        {
+          "name": "Form",
+          "type": "C",
+          "length": 14,
+          "decimals": 0
+        },
+        {
+          "name": "Lane",
+          "type": "N",
+          "length": 2,
+          "decimals": 0
+        },
+        {
+          "name": "Limit",
+          "type": "F",
+          "length": 3,
+          "decimals": 0
+        },
+        {
+          "name": "Object",
+          "type": "C",
+          "length": 14,
+          "decimals": 0
+        }
+      ],
+      "samples": [
+        {
+          "Name": "步行小路",
+          "Asset": "人行道",
+          "Category": "Pathway",
+          "Direction": "Both",
+          "Elevation": "201.6615",
+          "Form": "Normal",
+          "Lane": "0",
+          "Limit": "10",
+          "Object": "Pathway"
+        },
+        {
+          "Name": "步行小路",
+          "Asset": "人行道",
+          "Category": "Pathway",
+          "Direction": "Both",
+          "Elevation": "201.6689",
+          "Form": "Normal",
+          "Lane": "0",
+          "Limit": "10",
+          "Object": "Pathway"
+        }
+      ],
+      "categorical_top_values": {
+        "Name": [
+          [
+            "步行小路",
+            684
+          ],
+          [
+            "地铁轨道",
+            366
+          ],
+          [
+            "火车轨道",
+            309
+          ],
+          [
+            "",
+            203
+          ],
+          [
+            "航道",
+            130
+          ],
+          [
+            "有轨电车轨道",
+            71
+          ],
+          [
+            "万年青公路",
+            68
+          ],
+          [
+            "公共交通车道",
+            67
+          ]
+        ],
+        "Asset": [
+          [
+            "步行街道",
+            571
+          ],
+          [
+            "人行道",
+            462
+          ],
+          [
+            "双向地铁轨道",
+            330
+          ],
+          [
+            "单向三车道高速公路",
+            274
+          ],
+          [
+            "小型步行街道",
+            222
+          ],
+          [
+            "双线铁路",
+            214
+          ],
+          [
+            "宽阔人行道",
+            209
+          ],
+          [
+            "四车道分道行驶道路",
+            145
+          ]
+        ],
+        "Category": [
+          [
+            "Small",
+            972
+          ],
+          [
+            "Pathway",
+            675
+          ],
+          [
+            "Highway",
+            509
+          ],
+          [
+            "Subway",
+            366
+          ],
+          [
+            "Train",
+            309
+          ],
+          [
+            "Waterway",
+            266
+          ],
+          [
+            "Medium, Bicycle",
+            202
+          ],
+          [
+            "Small, Tram",
+            118
+          ]
+        ],
+        "Direction": [
+          [
+            "Both",
+            2806
+          ],
+          [
+            "Forward",
+            1161
+          ]
+        ],
+        "Form": [
+          [
+            "Normal",
+            3066
+          ],
+          [
+            "Tunnel",
+            453
+          ],
+          [
+            "Elevated",
+            448
+          ]
+        ],
+        "Object": [
+          [
+            "Road",
+            2204
+          ],
+          [
+            "Track",
+            746
+          ],
+          [
+            "Pathway",
+            684
+          ],
+          [
+            "Waterway",
+            266
+          ],
+          [
+            "Taxiway",
+            63
+          ],
+          [
+            "Runway",
+            4
+          ]
+        ]
+      },
+      "crs_wkt": "PROJCS[\"WGS_1984_UTM_Zone_31N\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",3.0],PARAMETER[\"Scale_Factor\",0.9996],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0]]",
+      "encoding": "UTF-8",
+      "encoding_audit": {
+        "declared": "UTF-8",
+        "utf8_invalid_field_values": 0,
+        "gb18030_invalid_field_values": 3332,
+        "note": "All inspected character field values passed strict UTF-8 decoding. The original DBF is preserved. Console display artifacts must not be treated as source encoding corruption."
+      }
+    },
+    {
+      "file": "GIS-files-example\\Shapefile\\ZUTTOMAYO CITY_POI_Location.shp",
+      "record_count": 845,
+      "shp_type": 1,
+      "bounds_xy": [
+        162831.296875,
+        -1489.884033203125,
+        172147.703125,
+        7181.2490234375
+      ],
+      "bounds_z": [
+        0.0,
+        0.0
+      ],
+      "fields": [
+        {
+          "name": "Name",
+          "type": "C",
+          "length": 67,
+          "decimals": 0
+        },
+        {
+          "name": "Addr_dist",
+          "type": "C",
+          "length": 30,
+          "decimals": 0
+        },
+        {
+          "name": "Addr_strt",
+          "type": "C",
+          "length": 30,
+          "decimals": 0
+        },
+        {
+          "name": "Addr_nmbr",
+          "type": "N",
+          "length": 6,
+          "decimals": 0
+        },
+        {
+          "name": "Category",
+          "type": "C",
+          "length": 105,
+          "decimals": 0
+        },
+        {
+          "name": "Object",
+          "type": "C",
+          "length": 18,
+          "decimals": 0
+        }
+      ],
+      "samples": [
+        {
+          "Name": "铜像",
+          "Addr_dist": "海参崴港",
+          "Addr_strt": "橡树街",
+          "Addr_nmbr": "811",
+          "Category": "Attraction",
+          "Object": "POIPublic"
+        },
+        {
+          "Name": "疾病控制中心",
+          "Addr_dist": "商住区",
+          "Addr_strt": "艾许福德街",
+          "Addr_nmbr": "60",
+          "Category": "Health",
+          "Object": "POIPublic"
+        }
+      ],
+      "categorical_top_values": {
+        "Name": [
+          [
+            "阳棚拐角公园",
+            38
+          ],
+          [
+            "国际机场",
+            31
+          ],
+          [
+            "篮球场",
+            22
+          ],
+          [
+            "现代口袋公园",
+            17
+          ],
+          [
+            "市中心客运站",
+            17
+          ],
+          [
+            "口袋公园（正方形）",
+            15
+          ],
+          [
+            "市中心火车站",
+            15
+          ],
+          [
+            "阳棚口袋公园",
+            14
+          ]
+        ],
+        "Addr_dist": [
+          [
+            "商住区",
+            379
+          ],
+          [
+            "办公区",
+            118
+          ],
+          [
+            "吉林大学",
+            88
+          ],
+          [
+            "工业区",
+            77
+          ],
+          [
+            "柯立芝路",
+            73
+          ],
+          [
+            "(非建制区域)",
+            46
+          ],
+          [
+            "尔滨",
+            37
+          ],
+          [
+            "海参崴港",
+            27
+          ]
+        ],
+        "Addr_strt": [
+          [
+            "萨默菲尔德街",
+            68
+          ],
+          [
+            "桤木溪街",
+            45
+          ],
+          [
+            "东方街",
+            42
+          ],
+          [
+            "白杨街",
+            33
+          ],
+          [
+            "公共交通车道",
+            31
+          ],
+          [
+            "铁木街",
+            25
+          ],
+          [
+            "橡林街",
+            22
+          ],
+          [
+            "小石溪街",
+            22
+          ]
+        ],
+        "Category": [
+          [
+            "Park",
+            190
+          ],
+          [
+            "TrafficLight",
+            116
+          ],
+          [
+            "StopBus",
+            96
+          ],
+          [
+            "Parking",
+            63
+          ],
+          [
+            "StopTram",
+            48
+          ],
+          [
+            "StopSubway",
+            48
+          ],
+          [
+            "Helipad",
+            39
+          ],
+          [
+            "LevelCrossing",
+            25
+          ]
+        ],
+        "Object": [
+          [
+            "POITransport",
+            464
+          ],
+          [
+            "POIPublic",
+            358
+          ],
+          [
+            "POIUtility",
+            23
+          ]
+        ]
+      },
+      "crs_wkt": "PROJCS[\"WGS_1984_UTM_Zone_31N\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",3.0],PARAMETER[\"Scale_Factor\",0.9996],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0]]",
+      "encoding": "UTF-8",
+      "encoding_audit": {
+        "declared": "UTF-8",
+        "utf8_invalid_field_values": 0,
+        "gb18030_invalid_field_values": 1441,
+        "note": "All inspected character field values passed strict UTF-8 decoding. The original DBF is preserved. Console display artifacts must not be treated as source encoding corruption."
+      }
+    },
+    {
+      "file": "GIS-files-example\\Shapefile\\ZUTTOMAYO CITY_Route_Centerline.shp",
+      "record_count": 21,
+      "shp_type": 3,
+      "bounds_xy": [
+        158855.1875,
+        -7166.25048828125,
+        173187.6875,
+        7166.2490234375
+      ],
+      "bounds_z": [
+        0.0,
+        0.0
+      ],
+      "fields": [
+        {
+          "name": "Name",
+          "type": "C",
+          "length": 26,
+          "decimals": 0
+        },
+        {
+          "name": "Color",
+          "type": "C",
+          "length": 13,
+          "decimals": 0
+        },
+        {
+          "name": "Length",
+          "type": "F",
+          "length": 14,
+          "decimals": 4
+        },
+        {
+          "name": "Object",
+          "type": "C",
+          "length": 20,
+          "decimals": 0
+        },
+        {
+          "name": "Passenger",
+          "type": "N",
+          "length": 3,
+          "decimals": 0
+        },
+        {
+          "name": "Stop",
+          "type": "N",
+          "length": 2,
+          "decimals": 0
+        },
+        {
+          "name": "Transport",
+          "type": "C",
+          "length": 12,
+          "decimals": 0
+        },
+        {
+          "name": "Usage",
+          "type": "F",
+          "length": 9,
+          "decimals": 4
+        },
+        {
+          "name": "Vehicle",
+          "type": "N",
+          "length": 2,
+          "decimals": 0
+        },
+        {
+          "name": "Weight",
+          "type": "N",
+          "length": 1,
+          "decimals": 0
+        }
+      ],
+      "samples": [
+        {
+          "Name": "北站城际1线",
+          "Color": "#E7A31D",
+          "Length": "1087.795",
+          "Object": "RoutePassenger",
+          "Passenger": "12",
+          "Stop": "2",
+          "Transport": "Train",
+          "Usage": "1.4286",
+          "Vehicle": "1",
+          "Weight": "0"
+        },
+        {
+          "Name": "轨道交通2号线",
+          "Color": "#00BFFF",
+          "Length": "15984.28",
+          "Object": "RoutePassenger",
+          "Passenger": "356",
+          "Stop": "7",
+          "Transport": "Subway",
+          "Usage": "8.2407",
+          "Vehicle": "4",
+          "Weight": "0"
+        }
+      ],
+      "categorical_top_values": {
+        "Name": [
+          [
+            "北站城际1线",
+            1
+          ],
+          [
+            "轨道交通2号线",
+            1
+          ],
+          [
+            "3路",
+            1
+          ],
+          [
+            "城际A线",
+            1
+          ],
+          [
+            "北站-东站城际",
+            1
+          ],
+          [
+            "5路",
+            1
+          ],
+          [
+            "机场线",
+            1
+          ],
+          [
+            "北站城际2线",
+            1
+          ]
+        ],
+        "Color": [
+          [
+            "#00C5C5",
+            8
+          ],
+          [
+            "#E7A31D",
+            5
+          ],
+          [
+            "#B647FF",
+            4
+          ],
+          [
+            "#00BFFF",
+            1
+          ],
+          [
+            "#FF0000",
+            1
+          ],
+          [
+            "#4EF700",
+            1
+          ],
+          [
+            "#0014FF",
+            1
+          ]
+        ],
+        "Object": [
+          [
+            "RoutePassenger",
+            21
+          ]
+        ],
+        "Transport": [
+          [
+            "Bus",
+            8
+          ],
+          [
+            "Train",
+            5
+          ],
+          [
+            "Subway",
+            4
+          ],
+          [
+            "Tram",
+            4
+          ]
+        ]
+      },
+      "crs_wkt": "PROJCS[\"WGS_1984_UTM_Zone_31N\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",3.0],PARAMETER[\"Scale_Factor\",0.9996],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0]]",
+      "encoding": "UTF-8",
+      "encoding_audit": {
+        "declared": "UTF-8",
+        "utf8_invalid_field_values": 0,
+        "gb18030_invalid_field_values": 14,
+        "note": "All inspected character field values passed strict UTF-8 decoding. The original DBF is preserved. Console display artifacts must not be treated as source encoding corruption."
+      }
+    },
+    {
+      "file": "GIS-files-example\\Shapefile\\ZUTTOMAYO CITY_Zoning_Boundary.shp",
+      "record_count": 33333,
+      "shp_type": 5,
+      "bounds_xy": [
+        162511.25,
+        -1323.86767578125,
+        172404.0625,
+        6779.6337890625
+      ],
+      "bounds_z": [
+        0.0,
+        0.0
+      ],
+      "fields": [
+        {
+          "name": "Name",
+          "type": "C",
+          "length": 48,
+          "decimals": 0
+        },
+        {
+          "name": "Color",
+          "type": "C",
+          "length": 13,
+          "decimals": 0
+        },
+        {
+          "name": "Object",
+          "type": "C",
+          "length": 12,
+          "decimals": 0
+        },
+        {
+          "name": "Zoning",
+          "type": "C",
+          "length": 29,
+          "decimals": 0
+        }
+      ],
+      "samples": [
+        {
+          "Name": "Residential Medium",
+          "Color": "#118411",
+          "Object": "Zoning",
+          "Zoning": "Residential"
+        },
+        {
+          "Name": "Residential Medium",
+          "Color": "#118411",
+          "Object": "Zoning",
+          "Zoning": "Residential"
+        }
+      ],
+      "categorical_top_values": {
+        "Name": [
+          [
+            "工业设施",
+            9436
+          ],
+          [
+            "Residential High",
+            4078
+          ],
+          [
+            "荷兰中密度联排住宅",
+            3980
+          ],
+          [
+            "高密度办公楼",
+            2206
+          ],
+          [
+            "荷兰低密度复折式屋顶住宅",
+            1948
+          ],
+          [
+            "Residential Mixed",
+            1726
+          ],
+          [
+            "Commercial High",
+            1644
+          ],
+          [
+            "低密度办公楼",
+            1147
+          ]
+        ],
+        "Color": [
+          [
+            "#FCF46F",
+            9436
+          ],
+          [
+            "#036C03",
+            5180
+          ],
+          [
+            "#16AB16",
+            4404
+          ],
+          [
+            "#32EC32",
+            2667
+          ],
+          [
+            "#9000E9",
+            2592
+          ],
+          [
+            "#00FFB7",
+            2420
+          ],
+          [
+            "#118411",
+            2285
+          ],
+          [
+            "#0973C3",
+            1859
+          ]
+        ],
+        "Object": [
+          [
+            "Zoning",
+            33333
+          ]
+        ],
+        "Zoning": [
+          [
+            "Residential",
+            14916
+          ],
+          [
+            "Industrial",
+            9552
+          ],
+          [
+            "Office",
+            3739
+          ],
+          [
+            "Commercial",
+            2706
+          ],
+          [
+            "Residential, Commercial",
+            2420
+          ]
+        ]
+      },
+      "crs_wkt": "PROJCS[\"WGS_1984_UTM_Zone_31N\",GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"False_Easting\",500000.0],PARAMETER[\"False_Northing\",0.0],PARAMETER[\"Central_Meridian\",3.0],PARAMETER[\"Scale_Factor\",0.9996],PARAMETER[\"Latitude_Of_Origin\",0.0],UNIT[\"Meter\",1.0]]",
+      "encoding": "UTF-8",
+      "encoding_audit": {
+        "declared": "UTF-8",
+        "utf8_invalid_field_values": 0,
+        "gb18030_invalid_field_values": 9241,
+        "note": "All inspected character field values passed strict UTF-8 decoding. The original DBF is preserved. Console display artifacts must not be treated as source encoding corruption."
+      }
+    }
+  ],
+  "limitations": [
+    "Metadata, raster pixels and DBF attributes inspected; full geometry validity, graph connectivity and gameplay compatibility not tested.",
+    "tifffile reported invalid next-page offsets while enumerating TIFF pages; first bands were read successfully; GDAL/QGIS compatibility requires dedicated verification."
+  ]
+}
