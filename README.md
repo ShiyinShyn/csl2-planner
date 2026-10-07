@@ -64,9 +64,13 @@
 
 软件计划提供内置离线指南查看器，支持目录导航、搜索和图片浏览，便于规划时随时查阅。
 
-## 反馈与关注
+## 反馈与贡献
 
-欢迎通过 GitHub Issues 提交使用需求、问题或建议。若希望关注后续可用版本，可以点击 **Star**。
+本项目目前由作者独立维护。欢迎通过 **GitHub Issues** 提交使用需求、问题报告和建议，也欢迎在相关 Issue 下评论讨论。
+
+为保持早期开发方向与架构的一致性，**现阶段暂不接受外部 Pull Requests（PR）**。如希望提供代码贡献，请先通过 Issue 沟通，并等待维护者明确邀请后再提交 PR。反馈不代表一定会被采纳，也不承诺响应或实现时间。
+
+详细说明见 [贡献与反馈指南](CONTRIBUTING.md)。若希望关注后续可用版本，可以点击 **Star**；也欢迎 **Fork**，但这不代表维护者承诺审查或合并衍生修改。
 
 ## 许可证与作者
 
@@ -138,9 +142,13 @@ For an introduction to road hierarchy, network layouts, and traffic organization
 
 An integrated offline guide viewer is planned, with a table of contents, search, and image browsing for quick reference while planning.
 
-## Feedback and updates
+## Feedback and contributions
 
-Use GitHub Issues to share user needs, report problems, or suggest improvements. **Star** the repository if you would like to follow future usable releases.
+This project is currently maintained independently by its author. **User needs, bug reports, suggestions, and discussion via GitHub Issues and issue comments are welcome.**
+
+To keep the project's direction and architecture consistent during early development, **external pull requests (PRs) are not being accepted at this stage**. If you would like to contribute code, please discuss it in an issue first and wait for an explicit invitation from the maintainer before submitting a PR. Feedback does not guarantee acceptance, a response, or an implementation timeline.
+
+See the [feedback and contribution guide](CONTRIBUTING.md) for details. **Star** the repository to follow future usable releases. **Forks** are also welcome, but do not imply a commitment to review or merge derivative changes.
 
 ## License and author
 
