@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **本项目处于早期开发阶段，暂无可用发布版本。** 如对本项目感兴趣，请您点击 **Star** 或 **Fork**，感谢您的关注。
+>
+> **This project is in early development, and no usable release is available yet.** If you are interested in this project, please **star** or **fork** the repository. Thank you for your interest and support!
+
 [Read in English ↓](#english)
 
 <a id="chinese"></a>
@@ -6,8 +11,7 @@
 
 面向《Cities: Skylines II》的非官方城市规划辅助工具，帮助玩家结合地图地形、用地与交通需求，制定道路和交通设施规划方案。
 
-> [!IMPORTANT]
-> **目前暂无可下载使用的软件版本。** 以下介绍的是计划提供的功能与使用体验，不代表这些功能已经可用。如果你对项目感兴趣，欢迎点击 **Star** 关注。
+以下介绍的是计划提供的功能与使用体验，不代表这些功能已经可用。
 
 ## 可以用它规划什么？
 
