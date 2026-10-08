@@ -4,7 +4,10 @@
 """Self-contained C0 contract, lifecycle and acceptance checks; no Qt or real data."""
 from __future__ import annotations
 
+import dataclasses
+import enum
 import importlib.util
+import inspect
 import io
 import sys
 import unittest
@@ -31,6 +34,7 @@ try:
     from prototypes.p0.job_lifecycle import (
         CancelStatus, FakeStage, FakeWorker, JobLifecycle, run_fake_job,
     )
+    from prototypes.p0 import job_acceptance, job_contracts, job_edits, job_fixtures, job_lifecycle
     from prototypes.p0.job_acceptance import AcceptanceState, assess_result_acceptance
     from prototypes.p0.job_edits import (
         EditAction, EditActor, EditCommand, EditState, EditTarget, LockEntry, LockManifest,
@@ -1220,6 +1224,155 @@ class JobEditChecks(unittest.TestCase):
                 setattr(target, name, None)
 
 
+CONTRACT_SCHEMA = "p0-04-c0-0.1.0"
+DATACLASS_FIELDS: dict[str, tuple[str, ...]] = {
+    "Diagnostic": ("code", "message", "severity", "object_id"),
+    "EnvelopeViewData": ("envelope_id", "alignment_id", "versions", "space", "resource", "data_state",
+                         "validation_state", "diagnostics", "source_layer"),
+    "JobEvent": ("identity", "versions", "sequence", "state", "stage_id", "completed", "total",
+                 "progress_unit", "error_code"),
+    "JobIdentity": ("project_id", "scenario_id", "job_id"),
+    "JobSpec": ("identity", "module_id", "versions", "space", "input_resources", "cancel_token",
+                "uses_boundary_data"),
+    "MapLayer": ("layer_id", "versions", "space", "resource", "geometry_type", "data_state",
+                 "diagnostics", "source_layer"),
+    "ProfileSample": ("station_m", "elevation_m"),
+    "ProfileViewData": ("alignment_id", "versions", "space", "samples", "data_state", "diagnostics",
+                        "station_unit", "elevation_unit"),
+    "ProjectSummary": ("project_id", "scenario_id", "versions", "space", "module_states", "resources",
+                       "map_layers", "profiles", "envelopes"),
+    "ResourceRef": ("resource_id", "relative_path", "purpose", "format", "sha256", "size_bytes"),
+    "ResultManifest": ("identity", "module_id", "versions", "space", "job_state", "artifacts",
+                       "validation_state", "diagnostics"),
+    "SpaceRef": ("space_id", "crs", "vertical_reference", "horizontal_unit", "elevation_unit"),
+    "VersionKey": ("input_revision", "parameter_revision", "model_version", "catalog_version",
+                   "rule_version", "boundary_revision", "schema_version"),
+    "FakeJobRun": ("events", "manifest"),
+    "FakeStage": ("stage_id", "steps", "known_total"),
+    "AcceptanceIssue": ("state", "code", "field"),
+    "ResultAcceptance": ("state", "current_project", "registered_job", "lifecycle_spec", "terminal_event",
+                         "cancellation_requested", "result", "issues"),
+    "EditAssessment": ("state", "project", "locks", "command", "issues"),
+    "EditCommand": ("command_id", "project_id", "scenario_id", "actor", "action", "scope_zone_id",
+                    "targets", "expected_versions", "expected_lock_revision", "resources"),
+    "EditIssue": ("state", "code", "field"),
+    "EditTarget": ("object_id", "kind", "zone_id"),
+    "LockEntry": ("target", "locked_revision", "invalid_retained"),
+    "LockManifest": ("revision", "entries"),
+    "UndoContract": ("undo_id", "ordinal", "command", "applied_versions", "applied_lock_revision"),
+    "UndoStack": ("entries",),
+}
+ENUM_VALUES: dict[str, tuple[str, ...]] = {
+    "CheckState": ("not_checked", "passed", "failed", "data_insufficient"),
+    "DataState": ("ready", "degraded", "data_insufficient"),
+    "GeometryType": ("raster", "point", "line", "polygon"),
+    "JobState": ("queued", "running", "succeeded", "failed", "cancelled"),
+    "ModuleId": ("M1", "M2", "M3", "M4", "M5"),
+    "ProgressUnit": ("items", "steps"),
+    "ResourceFormat": ("geotiff", "geopackage", "geojson", "json"),
+    "ResourcePurpose": ("input", "artifact"),
+    "Severity": ("info", "warning", "error"),
+    "CancelStatus": ("requested", "already_requested", "job_finished"),
+    "AcceptanceState": ("acceptable", "rejected_stale", "rejected_invalid"),
+    "EditAction": ("add", "modify", "remove", "lock", "unlock"),
+    "EditActor": ("user", "algorithm"),
+    "EditState": ("acceptable", "rejected_stale", "rejected_locked", "rejected_invalid"),
+    "ObjectKind": ("geometry", "configuration"),
+}
+CONTRACT_MODULES = (job_contracts, job_lifecycle, job_acceptance, job_edits)
+
+
+class JobHandoffChecks(unittest.TestCase):
+    def public_types(self) -> dict[str, type]:
+        found: dict[str, type] = {}
+        for module in CONTRACT_MODULES:
+            for name, obj in vars(module).items():
+                if inspect.isclass(obj) and obj.__module__ == module.__name__:
+                    found[name] = obj
+        return found
+
+    def test_schema_version_is_pinned(self) -> None:
+        self.assertEqual(job_contracts.JOB_SCHEMA_VERSION, CONTRACT_SCHEMA)
+        self.assertEqual(versions().schema_version, CONTRACT_SCHEMA)
+
+    def test_dataclass_field_names_and_order_are_pinned(self) -> None:
+        actual = {name: tuple(field.name for field in dataclasses.fields(obj))
+                  for name, obj in self.public_types().items()
+                  if dataclasses.is_dataclass(obj) and not issubclass(obj, enum.Enum)}
+        self.assertEqual(actual, DATACLASS_FIELDS)
+
+    def test_enum_values_and_order_are_pinned(self) -> None:
+        actual = {name: tuple(item.value for item in obj)
+                  for name, obj in self.public_types().items() if issubclass(obj, enum.Enum)}
+        self.assertEqual(actual, ENUM_VALUES)
+
+    def test_every_contract_dataclass_is_frozen_with_slots(self) -> None:
+        for name in DATACLASS_FIELDS:
+            with self.subTest(name=name):
+                obj = self.public_types()[name]
+                self.assertTrue(obj.__dataclass_params__.frozen)
+                self.assertTrue(hasattr(obj, "__slots__"))
+
+    def test_fixture_origin_is_synthetic_and_names_are_marked(self) -> None:
+        self.assertEqual(job_fixtures.FIXTURE_ORIGIN, "synthetic")
+        project, spec, lifecycle, manifest = job_fixtures.build_succeeded_run()
+        for text in (project.project_id, project.scenario_id, spec.identity.job_id, spec.cancel_token,
+                     project.versions.model_version, project.space.space_id):
+            self.assertIn("synthetic", text)
+        for item in project.resources + manifest.artifacts:
+            self.assertTrue(item.resource_id.startswith("synthetic-"))
+            self.assertEqual(item.sha256, job_fixtures.FIXTURE_HASH)
+
+    def test_fixture_package_builds_a_consistent_accepted_run(self) -> None:
+        project, spec, lifecycle, manifest = job_fixtures.build_succeeded_run()
+        self.assertEqual(lifecycle.state, JobState.SUCCEEDED)
+        self.assertEqual(manifest.versions, project.versions)
+        decision = assess_result_acceptance(project, spec, lifecycle, manifest)
+        self.assertTrue(decision.acceptable)
+
+    def test_fixture_builders_are_deterministic_and_independent(self) -> None:
+        self.assertEqual(job_fixtures.build_job(), job_fixtures.build_job())
+        first, second = job_fixtures.build_succeeded_run(), job_fixtures.build_succeeded_run()
+        self.assertIsNot(first[2], second[2])
+        self.assertEqual(first[2].events, second[2].events)
+
+    def test_fixture_boundary_variant_is_available(self) -> None:
+        self.assertTrue(job_fixtures.build_job(uses_boundary=True).uses_boundary_data)
+        self.assertIsNone(job_fixtures.build_versions(boundary=None).boundary_revision)
+
+    def test_fixture_module_reads_no_files(self) -> None:
+        source = Path(job_fixtures.__file__).read_text(encoding="utf-8")
+        for token in ("open(", "Path(", "read_text", "write_text", "os.", "shutil", "subprocess"):
+            self.assertNotIn(token, source)
+
+    def test_fixture_module_states_unverified_scope(self) -> None:
+        doc = job_fixtures.__doc__ or ""
+        for phrase in ("NOT verified", "Qt rendering", "Q consumer feedback", "transactional project"):
+            self.assertIn(phrase, doc)
+
+    def test_acceptable_result_carries_no_policy_conclusion(self) -> None:
+        project, spec, lifecycle, manifest = job_fixtures.build_succeeded_run()
+        decision = assess_result_acceptance(project, spec, lifecycle, manifest)
+        names = {field.name for field in dataclasses.fields(type(decision))}
+        self.assertFalse(any("polic" in name or "clear" in name or "d7" in name.casefold() for name in names))
+        self.assertEqual(manifest.job_state, JobState.SUCCEEDED)
+        self.assertEqual(manifest.validation_state, CheckState.PASSED)
+
+    def test_successful_job_with_failed_checks_is_never_acceptable(self) -> None:
+        project, spec, lifecycle, manifest = job_fixtures.build_succeeded_run()
+        failed = replace(manifest, validation_state=CheckState.FAILED, diagnostics=(diagnostic("CONSTRAINT_FAILED"),))
+        self.assertEqual(failed.job_state, JobState.SUCCEEDED)
+        decision = assess_result_acceptance(project, spec, lifecycle, failed)
+        self.assertFalse(decision.acceptable)
+        self.assertIn("RESULT_CHECKS_NOT_PASSED", {issue.code for issue in decision.issues})
+
+    def test_passed_checks_require_a_successful_job(self) -> None:
+        _, _, _, manifest = job_fixtures.build_succeeded_run()
+        with self.assertRaises(ContractError) as context:
+            replace(manifest, job_state=JobState.FAILED, diagnostics=(diagnostic("X", Severity.ERROR),))
+        self.assertEqual(context.exception.code, "INVALID_RESULT_VALIDATION")
+
+
 class SummaryResult(unittest.TestResult):
     def addFailure(self, test: unittest.TestCase, err: tuple) -> None:
         super().addFailure(test, err)
@@ -1242,15 +1395,16 @@ class SummaryResult(unittest.TestResult):
 
 def main() -> int:
     suites = tuple(unittest.defaultTestLoader.loadTestsFromTestCase(checks)
-                   for checks in (JobContractChecks, JobLifecycleChecks, JobAcceptanceChecks, JobEditChecks))
+                   for checks in (JobContractChecks, JobLifecycleChecks, JobAcceptanceChecks,
+                                  JobEditChecks, JobHandoffChecks))
     counts = tuple(suite.countTestCases() for suite in suites)
     outcome = SummaryResult()
     unittest.TestSuite(suites).run(outcome)
     if outcome.wasSuccessful() and not outcome.skipped and outcome.testsRun == sum(counts):
-        print(f"[SUCCESS] P0-04-A/B/C/D checks passed ({outcome.testsRun} cases: "
-              f"A={counts[0]}, B={counts[1]}, C={counts[2]}, D={counts[3]}); synthetic only.")
+        print(f"[SUCCESS] P0-04-A/B/C/D/E checks passed ({outcome.testsRun} cases: "
+              f"A={counts[0]}, B={counts[1]}, C={counts[2]}, D={counts[3]}, E={counts[4]}); synthetic only.")
         return 0
-    print(f"[FAILED] P0-04-A/B/C/D: {outcome.testsRun} cases; {len(outcome.failures)} failures, "
+    print(f"[FAILED] P0-04-A/B/C/D/E: {outcome.testsRun} cases; {len(outcome.failures)} failures, "
           f"{len(outcome.errors)} errors, {len(outcome.skipped)} skipped.")
     return 1
 
