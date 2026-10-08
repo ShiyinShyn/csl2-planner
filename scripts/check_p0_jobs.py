@@ -32,6 +32,10 @@ try:
         CancelStatus, FakeStage, FakeWorker, JobLifecycle, run_fake_job,
     )
     from prototypes.p0.job_acceptance import AcceptanceState, assess_result_acceptance
+    from prototypes.p0.job_edits import (
+        EditAction, EditActor, EditCommand, EditState, EditTarget, LockEntry, LockManifest,
+        ObjectKind, UndoContract, UndoStack, assess_edit, assess_undo,
+    )
 except (ImportError, OSError) as exc:
     print(f"[ENVIRONMENT REQUIRED] C0 imports failed: {type(exc).__name__}; see ENVIRONMENT.md.")
     raise SystemExit(2)
@@ -977,6 +981,245 @@ class JobAcceptanceChecks(unittest.TestCase):
                 self.assertEqual(context.exception.code, "INVALID_ACCEPTANCE_CONTEXT")
 
 
+def edit_target(object_id: str = "road-1", kind: ObjectKind = ObjectKind.GEOMETRY,
+                zone_id: str = "zone-1") -> EditTarget:
+    return EditTarget(object_id, kind, zone_id)
+
+
+def edit_command(**updates: Any) -> EditCommand:
+    fields: dict[str, Any] = dict(
+        command_id="cmd-1", project_id="synthetic-project-1", scenario_id="synthetic-scenario-1",
+        actor=EditActor.USER, action=EditAction.MODIFY, scope_zone_id="zone-1",
+        targets=(edit_target(),), expected_versions=versions(), expected_lock_revision="locks-r1")
+    fields.update(updates)
+    return EditCommand(**fields)
+
+
+def edit_project() -> ProjectSummary:
+    return ProjectSummary("synthetic-project-1", "synthetic-scenario-1", versions(), space(),
+                          tuple((module, None) for module in ModuleId), (resource(),))
+
+
+def lock_manifest(*entries: LockEntry, revision: str = "locks-r1") -> LockManifest:
+    return LockManifest(revision, tuple(entries))
+
+
+def lock_entry(target: EditTarget | None = None, *, invalid: bool = False) -> LockEntry:
+    return LockEntry(target or edit_target(), "locked-r1", invalid)
+
+
+class JobEditChecks(unittest.TestCase):
+    def assertCode(self, code: str, function: Callable[..., Any], *args: Any, **kwargs: Any) -> None:
+        with self.assertRaises(ContractError) as context:
+            function(*args, **kwargs)
+        self.assertEqual(context.exception.code, code)
+
+    def assertEdit(self, state: EditState, code: str | None, *args: Any, **kwargs: Any) -> Any:
+        decision = assess_edit(*args, **kwargs)
+        self.assertEqual(decision.state, state)
+        if code is not None:
+            self.assertIn(code, {issue.code for issue in decision.issues})
+        return decision
+
+    def test_unlocked_modify_is_acceptable(self) -> None:
+        decision = self.assertEdit(EditState.ACCEPTABLE, None, edit_project(), lock_manifest(), edit_command())
+        self.assertTrue(decision.acceptable)
+        self.assertEqual(decision.issues, ())
+
+    def test_locked_target_blocks_every_actor_and_edit_action(self) -> None:
+        locks = lock_manifest(lock_entry())
+        for actor in (EditActor.USER, EditActor.ALGORITHM):
+            for action in (EditAction.ADD, EditAction.MODIFY, EditAction.REMOVE):
+                with self.subTest(actor=actor, action=action):
+                    self.assertEdit(EditState.REJECTED_LOCKED, "TARGET_LOCKED", edit_project(), locks,
+                                    edit_command(actor=actor, action=action))
+
+    def test_invalid_retained_lock_still_blocks_writes(self) -> None:
+        locks = lock_manifest(lock_entry(invalid=True))
+        self.assertEdit(EditState.REJECTED_LOCKED, "TARGET_LOCKED", edit_project(), locks, edit_command())
+
+    def test_lock_is_per_object_and_kind(self) -> None:
+        locks = lock_manifest(lock_entry(edit_target(kind=ObjectKind.CONFIGURATION)))
+        self.assertEdit(EditState.ACCEPTABLE, None, edit_project(), locks, edit_command())
+        other = lock_manifest(lock_entry(edit_target("road-2")))
+        self.assertEdit(EditState.ACCEPTABLE, None, edit_project(), other, edit_command())
+
+    def test_one_locked_target_rejects_the_whole_write_set(self) -> None:
+        locks = lock_manifest(lock_entry(edit_target("road-2")))
+        command = edit_command(targets=(edit_target(), edit_target("road-2")))
+        decision = self.assertEdit(EditState.REJECTED_LOCKED, "TARGET_LOCKED", edit_project(), locks, command)
+        self.assertEqual([issue.field for issue in decision.issues], ["targets[1]"])
+
+    def test_algorithm_cannot_lock_or_unlock(self) -> None:
+        for action in (EditAction.LOCK, EditAction.UNLOCK):
+            with self.subTest(action=action):
+                self.assertCode("ALGORITHM_CANNOT_CHANGE_LOCKS", edit_command,
+                                actor=EditActor.ALGORITHM, action=action)
+
+    def test_user_must_unlock_before_editing(self) -> None:
+        locks = lock_manifest(lock_entry())
+        self.assertEdit(EditState.REJECTED_LOCKED, "TARGET_LOCKED", edit_project(), locks, edit_command())
+        self.assertEdit(EditState.ACCEPTABLE, None, edit_project(), locks,
+                        edit_command(action=EditAction.UNLOCK))
+        self.assertEdit(EditState.ACCEPTABLE, None, edit_project(), lock_manifest(revision="locks-r1"),
+                        edit_command())
+
+    def test_lock_and_unlock_preconditions(self) -> None:
+        self.assertEdit(EditState.ACCEPTABLE, None, edit_project(), lock_manifest(),
+                        edit_command(action=EditAction.LOCK))
+        self.assertEdit(EditState.REJECTED_INVALID, "ALREADY_LOCKED", edit_project(),
+                        lock_manifest(lock_entry()), edit_command(action=EditAction.LOCK))
+        self.assertEdit(EditState.REJECTED_INVALID, "NOT_LOCKED", edit_project(), lock_manifest(),
+                        edit_command(action=EditAction.UNLOCK))
+
+    def test_lock_manifest_rejects_duplicate_entries(self) -> None:
+        self.assertCode("DUPLICATE_LOCK", lock_manifest, lock_entry(), lock_entry())
+
+    def test_each_version_drift_makes_command_stale(self) -> None:
+        for field in ("input_revision", "parameter_revision", "boundary_revision",
+                      "model_version", "catalog_version", "rule_version"):
+            with self.subTest(field=field):
+                project = replace(edit_project(), versions=replace(versions(), **{field: "changed"}))
+                decision = self.assertEdit(EditState.REJECTED_STALE, "VERSION_CHANGED", project,
+                                           lock_manifest(), edit_command())
+                self.assertIn(f"expected_versions.{field}", {issue.field for issue in decision.issues})
+
+    def test_lock_manifest_revision_drift_makes_command_stale(self) -> None:
+        self.assertEdit(EditState.REJECTED_STALE, "LOCK_MANIFEST_CHANGED", edit_project(),
+                        lock_manifest(revision="locks-r2"), edit_command())
+
+    def test_project_identity_mismatch_is_invalid(self) -> None:
+        for field in ("project_id", "scenario_id"):
+            with self.subTest(field=field):
+                self.assertEdit(EditState.REJECTED_INVALID, "PROJECT_IDENTITY_MISMATCH", edit_project(),
+                                lock_manifest(), edit_command(**{field: "other"}))
+
+    def test_target_outside_declared_zone_is_rejected(self) -> None:
+        command = edit_command(targets=(edit_target(zone_id="zone-2"),))
+        self.assertEdit(EditState.REJECTED_INVALID, "TARGET_OUT_OF_SCOPE", edit_project(), lock_manifest(), command)
+
+    def test_write_set_must_be_declared_unique_and_bounded(self) -> None:
+        self.assertCode("EMPTY_WRITE_SET", edit_command, targets=())
+        self.assertCode("DUPLICATE_TARGET", edit_command, targets=(edit_target(), edit_target()))
+        many = tuple(edit_target(f"road-{index}") for index in range(1025))
+        self.assertCode("INVALID_COLLECTION", edit_command, targets=many)
+        self.assertCode("INVALID_COLLECTION", edit_command, targets=[edit_target()])
+
+    def test_lock_and_remove_commands_carry_no_resources(self) -> None:
+        extra = (resource("extra.json", fmt=ResourceFormat.JSON),)
+        self.assertCode("LOCK_COMMAND_HAS_RESOURCES", edit_command, action=EditAction.LOCK, resources=extra)
+        self.assertCode("REMOVE_COMMAND_HAS_RESOURCES", edit_command, action=EditAction.REMOVE, resources=extra)
+
+    def test_raw_enums_and_untyped_context_are_rejected(self) -> None:
+        self.assertCode("INVALID_ENUM", edit_command, actor="user")
+        self.assertCode("INVALID_ENUM", edit_command, action="modify")
+        self.assertCode("INVALID_EDIT_CONTEXT", edit_command, expected_versions={})
+        self.assertCode("INVALID_EDIT_CONTEXT", assess_edit, {}, lock_manifest(), edit_command())
+
+    def test_declared_resource_must_match_observed_description(self) -> None:
+        asset = resource("assets/new.json", fmt=ResourceFormat.JSON)
+        command = edit_command(resources=(asset,))
+        self.assertEdit(EditState.ACCEPTABLE, None, edit_project(), lock_manifest(), command, (asset,))
+        self.assertEdit(EditState.REJECTED_INVALID, "RESOURCE_MISSING", edit_project(), lock_manifest(), command)
+        for name, value in (("sha256", "b" * 64), ("size_bytes", 129), ("relative_path", "assets/moved.json")):
+            with self.subTest(name=name):
+                changed = replace(asset, **{name: value})
+                self.assertEdit(EditState.REJECTED_INVALID, "RESOURCE_CHANGED", edit_project(),
+                                lock_manifest(), command, (changed,))
+
+    def test_declared_resource_cannot_replace_registered_one(self) -> None:
+        project = edit_project()
+        for updates in ({"sha256": "b" * 64}, {"resource_id": "other-id", "sha256": "b" * 64}):
+            with self.subTest(updates=updates):
+                clash = replace(project.resources[0], **updates)
+                self.assertEdit(EditState.REJECTED_INVALID, "RESOURCE_CONFLICT", project, lock_manifest(),
+                                edit_command(resources=(clash,)), (clash,))
+
+    def test_path_traversal_resource_cannot_be_constructed(self) -> None:
+        self.assertCode("INVALID_RESOURCE_PATH", ResourceRef, "r", "../outside.json",
+                        ResourcePurpose.ARTIFACT, ResourceFormat.JSON, "a" * 64, 1)
+
+    def test_issues_are_ordered_and_invalid_outranks_locked_and_stale(self) -> None:
+        project = replace(edit_project(), versions=replace(versions(), input_revision="new"))
+        command = edit_command(targets=(edit_target(zone_id="zone-2"),))
+        decision = assess_edit(project, lock_manifest(lock_entry(edit_target(zone_id="zone-2"))), command)
+        self.assertEqual(decision.state, EditState.REJECTED_INVALID)
+        self.assertEqual([issue.code for issue in decision.issues],
+                         ["VERSION_CHANGED", "TARGET_OUT_OF_SCOPE", "TARGET_LOCKED"])
+        with self.assertRaises(ContractError) as context:
+            replace(decision, state=EditState.ACCEPTABLE)
+        self.assertEqual(context.exception.code, "INVALID_EDIT_STATE")
+
+    def undo_fixture(self, **updates: Any) -> tuple[UndoStack, UndoContract]:
+        command = edit_command(**updates)
+        entry = UndoContract("undo-1", 0, command, versions(), "locks-r1")
+        return UndoStack((entry,)), entry
+
+    def test_latest_matching_entry_can_be_undone(self) -> None:
+        stack, entry = self.undo_fixture()
+        decision = assess_undo(edit_project(), lock_manifest(), stack, entry)
+        self.assertTrue(decision.acceptable)
+
+    def test_only_latest_entry_can_be_undone(self) -> None:
+        first = UndoContract("undo-1", 0, edit_command(), versions(), "locks-r1")
+        second = UndoContract("undo-2", 1, edit_command(command_id="cmd-2"), versions(), "locks-r1")
+        decision = assess_undo(edit_project(), lock_manifest(), UndoStack((first, second)), first)
+        self.assertEqual(decision.state, EditState.REJECTED_INVALID)
+        self.assertIn("UNDO_NOT_LATEST", {issue.code for issue in decision.issues})
+        self.assertTrue(assess_undo(edit_project(), lock_manifest(), UndoStack((first, second)), second).acceptable)
+
+    def test_entry_missing_from_stack_is_rejected(self) -> None:
+        _, entry = self.undo_fixture()
+        decision = assess_undo(edit_project(), lock_manifest(), UndoStack(), entry)
+        self.assertIn("UNDO_NOT_LATEST", {issue.code for issue in decision.issues})
+
+    def test_undo_after_newer_edit_is_stale(self) -> None:
+        stack, entry = self.undo_fixture()
+        project = replace(edit_project(), versions=replace(versions(), input_revision="newer-edit"))
+        self.assertEqual(assess_undo(project, lock_manifest(), stack, entry).state, EditState.REJECTED_STALE)
+        self.assertEqual(assess_undo(edit_project(), lock_manifest(revision="locks-r2"), stack, entry).state,
+                         EditState.REJECTED_STALE)
+
+    def test_undo_cannot_bypass_a_lock_added_after_the_edit(self) -> None:
+        stack, entry = self.undo_fixture()
+        decision = assess_undo(edit_project(), lock_manifest(lock_entry()), stack, entry)
+        self.assertEqual(decision.state, EditState.REJECTED_LOCKED)
+
+    def test_undoing_a_lock_command_requires_the_lock_to_exist(self) -> None:
+        stack, entry = self.undo_fixture(action=EditAction.LOCK)
+        self.assertEqual(assess_undo(edit_project(), lock_manifest(), stack, entry).state, EditState.REJECTED_INVALID)
+        self.assertTrue(assess_undo(edit_project(), lock_manifest(lock_entry()), stack, entry).acceptable)
+
+    def test_undo_stack_is_validated(self) -> None:
+        entry = UndoContract("undo-1", 0, edit_command(), versions(), "locks-r1")
+        self.assertCode("INVALID_UNDO_STACK", UndoStack, (replace(entry, ordinal=1),))
+        self.assertCode("INVALID_UNDO_STACK", UndoStack, (entry, replace(entry, ordinal=1)))
+        other = replace(entry, undo_id="undo-2", ordinal=1, command=edit_command(project_id="other"))
+        self.assertCode("INVALID_UNDO_STACK", UndoStack, (entry, other))
+        many = tuple(UndoContract(f"undo-{index}", index, edit_command(command_id=f"cmd-{index}"),
+                                  versions(), "locks-r1") for index in range(257))
+        self.assertCode("INVALID_COLLECTION", UndoStack, many)
+
+    def test_accepted_edit_makes_previous_result_stale(self) -> None:
+        project, spec, lifecycle, manifest = JobAcceptanceChecks().fixture()
+        self.assertTrue(assess_result_acceptance(project, spec, lifecycle, manifest).acceptable)
+        decision = assess_edit(project, lock_manifest(), edit_command())
+        self.assertTrue(decision.acceptable)
+        edited = replace(project, versions=replace(project.versions, input_revision="after-edit"))
+        stale = assess_result_acceptance(edited, spec, lifecycle, manifest)
+        self.assertEqual(stale.state, AcceptanceState.REJECTED_STALE)
+
+    def test_assessment_is_pure_and_records_are_immutable(self) -> None:
+        project, locks, command = edit_project(), lock_manifest(lock_entry()), edit_command()
+        before = (repr(project), repr(locks), repr(command))
+        decision = assess_edit(project, locks, command)
+        self.assertEqual((repr(project), repr(locks), repr(command)), before)
+        self.assertEqual(decision, assess_edit(project, locks, command))
+        for target, name in ((decision, "state"), (command, "actor"), (locks, "revision"), (lock_entry(), "invalid_retained")):
+            with self.subTest(name=name), self.assertRaises(FrozenInstanceError):
+                setattr(target, name, None)
+
+
 class SummaryResult(unittest.TestResult):
     def addFailure(self, test: unittest.TestCase, err: tuple) -> None:
         super().addFailure(test, err)
@@ -999,15 +1242,15 @@ class SummaryResult(unittest.TestResult):
 
 def main() -> int:
     suites = tuple(unittest.defaultTestLoader.loadTestsFromTestCase(checks)
-                   for checks in (JobContractChecks, JobLifecycleChecks, JobAcceptanceChecks))
+                   for checks in (JobContractChecks, JobLifecycleChecks, JobAcceptanceChecks, JobEditChecks))
     counts = tuple(suite.countTestCases() for suite in suites)
     outcome = SummaryResult()
     unittest.TestSuite(suites).run(outcome)
     if outcome.wasSuccessful() and not outcome.skipped and outcome.testsRun == sum(counts):
-        print(f"[SUCCESS] P0-04-A/B/C checks passed ({outcome.testsRun} cases: "
-              f"A={counts[0]}, B={counts[1]}, C={counts[2]}); synthetic only.")
+        print(f"[SUCCESS] P0-04-A/B/C/D checks passed ({outcome.testsRun} cases: "
+              f"A={counts[0]}, B={counts[1]}, C={counts[2]}, D={counts[3]}); synthetic only.")
         return 0
-    print(f"[FAILED] P0-04-A/B/C: {outcome.testsRun} cases; {len(outcome.failures)} failures, "
+    print(f"[FAILED] P0-04-A/B/C/D: {outcome.testsRun} cases; {len(outcome.failures)} failures, "
           f"{len(outcome.errors)} errors, {len(outcome.skipped)} skipped.")
     return 1
 
