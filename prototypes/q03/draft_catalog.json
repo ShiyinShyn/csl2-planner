@@ -1,6 +1,6 @@
 {
   "draft_schema_version": "q03-draft-0.1",
-  "catalog_version": "q03-draft-0.1.0",
+  "catalog_version": "q03-draft-0.1.1",
   "status": "DRAFT",
   "consumer_baseline_refs": [
     {"path": "docs/planning/需求基线与D系列决策规范-R1.md", "version": null, "sections": ["1.5 D4", "1.6 D5", "1.7 D6", "1.8 D7"], "notes": "文件未声明独立版本号；业务权威。D4～D6 已读，D7 仅在盘点中定位。头部历史状态不代表当前进度。"},
@@ -103,8 +103,7 @@
                      {"source_id": "SRC-PLAN", "role": "DEFINITION", "claim_locator": "2.3.1 P0-03-B：按功能组成与版本默认推 P/A", "notes": "说明需要规模派生输入。"}],
      "rule_refs": ["R1 D5", "计划 v0.2.1 2.3.1 P0-03-B"],
      "gaps": [
-       {"field": "INVENTORY_SPLIT", "reason": "居民、就业、地块面积、楼面面积、住户和容量/实际值尚未拆成单一量。", "next_evidence": "核对官方机制或版本资料，确定各量的定义、分母和适用用地类型。"},
-       {"field": "value", "reason": "没有已核的规模系数。", "next_evidence": "取得可引用证据后再逐项登记；无依据时由 P/G0 处理理论假设，不得按只读推为零。"}],
+       {"field": "INVENTORY_SPLIT", "reason": "居民、就业、地块面积、楼面面积、住户和容量/实际值尚未拆成单一量。\n拆分后数值资料缺口：没有已核的规模系数。", "next_evidence": "核对官方机制或版本资料，确定各量的定义、分母和适用用地类型。\n拆分后数值资料取证：取得可引用证据后再逐项登记；无依据时由 P/G0 处理理论假设，不得按只读推为零。"}],
      "consumer_tasks": ["P0-03", "Q-07.0"]},
     {"group_id": "GRP-DEM-RATES", "name": "分目的产生与吸引率",
      "definition": "各目的的产生率和吸引率参数组（盘点 DEM-04、DEM-05）；目的划分、单程/往返、产生端/吸引端和统计时段尚未确定。",
@@ -112,16 +111,14 @@
                      {"source_id": "SRC-GUIDE-DEMAND", "role": "DEFINITION", "claim_locator": "第5期：主要出行流向（定性）", "notes": "仅提供候选机制线索；办公通勤等陈述未校准，不代表零需求。"}],
      "rule_refs": ["R1 D5：非住宅需求不得因只读缺省为零", "计划 v0.2.1 2.3.1 P0-03-B"],
      "gaps": [
-       {"field": "INVENTORY_SPLIT", "reason": "按目的、方向、规模分母和时段拆分的单项参数尚未形成。", "next_evidence": "与 P0-03 目的/时段字典对照后拆分，并确认重复计数边界。"},
-       {"field": "value", "reason": "没有可引用的定量依据。", "next_evidence": "核对游戏机制证据；不足时由 P/G0 提供受控理论假设。"}],
+       {"field": "INVENTORY_SPLIT", "reason": "按目的、方向、规模分母和时段拆分的单项参数尚未形成。\n拆分后数值资料缺口：没有可引用的定量依据。", "next_evidence": "与 P0-03 目的/时段字典对照后拆分，并确认重复计数边界。\n拆分后数值资料取证：核对游戏机制证据；不足时由 P/G0 提供受控理论假设。"}],
      "consumer_tasks": ["P0-03", "Q-07.0"]},
     {"group_id": "GRP-DEM-MIXED", "name": "混合用地构成与去重",
      "definition": "住宅/商业构成比例及其面积或容量分母的参数组（盘点 DEM-06）；用于避免同一活动重复计入。",
      "source_refs": [{"source_id": "SRC-R1", "role": "RULE", "claim_locator": "D5：必须拆分/标记模型中住宅与商业构成，避免出行重复计数", "notes": "仅规则。"}],
      "rule_refs": ["R1 D5"],
      "gaps": [
-       {"field": "INVENTORY_SPLIT", "reason": "构成比例的分母和批次口径未定。", "next_evidence": "由 P0-03 数据字典确定面积/容量/岗位等分母后登记。"},
-       {"field": "value", "reason": "无可核比例或默认。", "next_evidence": "无证据前保持未知。"}],
+       {"field": "INVENTORY_SPLIT", "reason": "构成比例的分母和批次口径未定。\n拆分后数值资料缺口：无可核比例或默认。", "next_evidence": "由 P0-03 数据字典确定面积/容量/岗位等分母后登记。\n拆分后数值资料取证：无证据前保持未知。"}],
      "consumer_tasks": ["P0-03"]},
     {"group_id": "GRP-DEM-EXTERNAL", "name": "外部迁入迁出、过境与机场边界客流",
      "definition": "外部来源需求参数组（盘点 DEM-08、DEM-09）；机场只作为外部端点和地面接驳，同批客流只计网关一次。",
@@ -129,8 +126,7 @@
                      {"source_id": "SRC-GUIDE-DEMAND", "role": "DEFINITION", "claim_locator": "第5期：迁入潮与外部—住宅区流向（定性）", "notes": "迁入人口库存变化不等于某时段交通量。"}],
      "rule_refs": ["R1 D4", "计划 v0.2.1 2.3.1 P0-03-D"],
      "gaps": [
-       {"field": "INVENTORY_SPLIT", "reason": "迁入、迁出、过境与机场边界客流的方向、批次、人次/车次口径未拆。", "next_evidence": "确定统计边界后分别登记，并保持来源批次归属。"},
-       {"field": "value", "reason": "没有可引用的量化来源。", "next_evidence": "取得版本绑定证据或由 P/G0 给理论假设。"}],
+       {"field": "INVENTORY_SPLIT", "reason": "迁入、迁出、过境与机场边界客流的方向、批次、人次/车次口径未拆。\n拆分后数值资料缺口：没有可引用的量化来源。", "next_evidence": "确定统计边界后分别登记，并保持来源批次归属。\n拆分后数值资料取证：取得版本绑定证据或由 P/G0 给理论假设。"}],
      "consumer_tasks": ["P0-03", "Q-07.0"]},
     {"group_id": "GRP-FRE-ROAD", "name": "公路货运产生与货物量转车次",
      "definition": "公路货运需求及货物量到车次的转换参数组（盘点 FRE-01、FRE-02）；首版货运只计公路段，选定单一计算口径。",
@@ -139,8 +135,7 @@
                      {"source_id": "SRC-GUIDE-DEMAND", "role": "DEFINITION", "claim_locator": "第5期：工业区货车流向（定性）", "notes": "资料线索，不含载荷或车次系数。"}],
      "rule_refs": ["R1 D4", "R1 D5", "计划 v0.2.1 2.3.1 P0-03-B/C"],
      "gaps": [
-       {"field": "INVENTORY_SPLIT", "reason": "货物量单位、车型、有效载荷、空驶和配送合并尚未拆成单一量。", "next_evidence": "核对资源单位与车辆任务的关系，再决定车次或质量口径。"},
-       {"field": "value", "reason": "没有已核载荷或转换系数。", "next_evidence": "最大容量不能当有效载荷；需版本绑定证据。"}],
+       {"field": "INVENTORY_SPLIT", "reason": "货物量单位、车型、有效载荷、空驶和配送合并尚未拆成单一量。\n拆分后数值资料缺口：没有已核载荷或转换系数。", "next_evidence": "核对资源单位与车辆任务的关系，再决定车次或质量口径。\n拆分后数值资料取证：最大容量不能当有效载荷；需版本绑定证据。"}],
      "consumer_tasks": ["P0-03", "Q-07.0"]},
     {"group_id": "GRP-SUP-TRANSFER", "name": "聚合转接时间与服务能力",
      "definition": "固定聚合换乘时间，以及道路、线路或站港的服务能力参数组（盘点 SUP-01、SUP-02）。",
@@ -148,8 +143,7 @@
                      {"source_id": "SRC-GUIDE-DEMAND", "role": "DEFINITION", "claim_locator": "第5期：交通量、流量、饱和流量、交叉口容量概念", "notes": "概念区分；不是游戏资产能力数值。"}],
      "rule_refs": ["R1 D4"],
      "gaps": [
-       {"field": "INVENTORY_SPLIT", "reason": "不同方式和对象的时间、容量、流量、实际通过量未拆。", "next_evidence": "按资产、线路或班次确定对象、单位和时间基准后拆分。"},
-       {"field": "value", "reason": "没有已核服务能力或统一转接时间。", "next_evidence": "需要资产/版本证据。"}],
+       {"field": "INVENTORY_SPLIT", "reason": "不同方式和对象的时间、容量、流量、实际通过量未拆。\n拆分后数值资料缺口：没有已核服务能力或统一转接时间。", "next_evidence": "按资产、线路或班次确定对象、单位和时间基准后拆分。\n拆分后数值资料取证：需要资产/版本证据。"}],
      "consumer_tasks": ["P0-03", "Q-03.1"]},
     {"group_id": "GRP-GEO-ENVELOPE", "name": "包络尺寸、覆土、净空与安全余量",
      "definition": "资产宽高、净空、覆土、基础保护底界和安全余量参数组（盘点 GEO-01）；每个量的测量基准和轴向不同。",
@@ -157,8 +151,7 @@
                      {"source_id": "SRC-PLAN", "role": "DEFINITION", "claim_locator": "2.3.3 P0-05-A：有来源宽高/覆土/净空/坡度/曲率，目录未知单列", "notes": "要求单位和资产来源。"}],
      "rule_refs": ["R1 D6", "R1 D7", "计划 v0.2.1 2.3.3 P0-05-A"],
      "gaps": [
-       {"field": "INVENTORY_SPLIT", "reason": "宽度、高度、覆土、基础底界等不能共享单一值；基础底界为有符号高程。", "next_evidence": "按资产、形态和测量基准逐项拆分。"},
-       {"field": "value", "reason": "没有资产来源，缺资料不得报三维安全。", "next_evidence": "取得版本绑定资产证据。"}],
+       {"field": "INVENTORY_SPLIT", "reason": "宽度、高度、覆土、基础底界等不能共享单一值；基础底界为有符号高程。\n拆分后数值资料缺口：没有资产来源，缺资料不得报三维安全。", "next_evidence": "按资产、形态和测量基准逐项拆分。\n拆分后数值资料取证：取得版本绑定资产证据。"}],
      "consumer_tasks": ["P0-05", "Q-03.1"]},
     {"group_id": "GRP-GEO-ALIGNMENT", "name": "纵坡与曲率限制",
      "definition": "不同形态和资产的纵坡、曲率或最小半径限制参数组（盘点 GEO-02）。",
@@ -166,8 +159,7 @@
                      {"source_id": "SRC-PLAN", "role": "DEFINITION", "claim_locator": "2.3.3 P0-05-A/D", "notes": "要求有来源的坡度、曲率，并保留失败证据。"}],
      "rule_refs": ["R1 D6", "R1 D7", "计划 v0.2.1 2.3.3"],
      "gaps": [
-       {"field": "INVENTORY_SPLIT", "reason": "坡度、曲率、半径单位和形态适用范围未拆。", "next_evidence": "按资产、形态与版本拆分，单位不可互换。"},
-       {"field": "value", "reason": "不得用现实规范或合成 TunnelRules 数值填游戏通用值。", "next_evidence": "需版本绑定资产证据。"}],
+       {"field": "INVENTORY_SPLIT", "reason": "坡度、曲率、半径单位和形态适用范围未拆。\n拆分后数值资料缺口：不得用现实规范或合成 TunnelRules 数值填游戏通用值。", "next_evidence": "按资产、形态与版本拆分，单位不可互换。\n拆分后数值资料取证：需版本绑定资产证据。"}],
      "consumer_tasks": ["P0-05", "Q-03.1"]}
   ]
 }
