@@ -59,7 +59,7 @@ conda run -n csl2-planner --no-capture-output python -s scripts/check_environmen
 
 `environment.yml` 是轻量、跨平台的兼容依赖声明，
 不精确锁定补丁版本、构建号或传递依赖，也不保证所有平台已经运行验证。
-`environment-win-64.explicit.txt` 记录本次 Windows x86-64 安装的包 URL 与 MD5，
+`environment-win-64.explicit.txt` 记录此前 GIS 基线环境的包 URL 与 MD5，不含本次新增的 Qt/PySide6；它不是当前完整 GUI 环境的锁定清单，
 只能在匹配平台使用，不能用于 Linux/macOS。
 
 ```text
@@ -76,3 +76,22 @@ conda run -n csl2-planner-exact --no-capture-output python -s scripts/check_envi
 自检覆盖双矢量引擎、GEOS/PROJ、GeoTIFF/裁剪、DEM 梯度、路网最短路、
 优化、配置/CLI 和已安装包渠道。它验证运行环境，不验证城市规划结果或交通模型。
 原始数据与外部资料的公开范围见 [DATA_SOURCES.md](DATA_SOURCES.md)。
+
+## Qt/PySide6 依赖检查（不启动 GUI）
+
+environment.yml 已声明 `pyside6>=6.11,<7`，与 GIS 包一并从 conda-forge 求解；
+不要另用 Pip 安装或覆盖 Qt/GIS 二进制包。无需激活的导入检查：
+
+```text
+conda run -n csl2-planner --no-capture-output python -s -c "import PySide6; from PySide6 import QtCore, QtGui, QtWidgets; print('PySide6', PySide6.__version__, 'Qt', QtCore.qVersion())"
+```
+
+2026-10-09 Windows x86-64 环境检查：PySide6 6.11.2、Qt 6.11.2；
+QtCore/QtGui/QtWidgets 导入成功，Windows 平台插件 qwindows.dll 存在，
+既有 GIS 合成环境自检通过。安装仅新增 21 个包，原有 98 个包的版本、构建号和渠道记录未变。
+真实 Carto 样例未运行，脚本中的可选样例 SKIP 不计为通过。
+
+这些结果仅证明依赖可加载及既有合成检查未回退。未创建 QApplication、
+未验证原生窗口、字体、地图交互或指南显示，不代表 Q-01.0/Q-02.0 PoC 已通过。
+旧显式清单可复现 GIS 基线，但不能单独复现本次 GUI 依赖集合；
+Qt/PySide6 的跨平台兼容和完整分发许可仍需对应 Q 检查点验证。

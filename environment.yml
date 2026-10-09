@@ -6,6 +6,9 @@ channels:
 dependencies:
   - python=3.11
 
+  # Native Qt GUI; GIS packages remain jointly managed by Conda.
+  - "pyside6>=6.11,<7"
+
   # GIS; geopandas-base supplies import geopandas without plotting extras.
   - "geopandas-base>=1.1,<2"
   - "shapely>=2.1,<3"
